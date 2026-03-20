@@ -6,7 +6,6 @@
 
 | Topics                                                                                     | Overview                                         |
 | ------------------------------------------------------------------------------------------ | ------------------------------------------------ |
-| [01. Database Fundamentals](#01-database-fundamentals)                                     | Core database concepts, RDBMS, SQL basics        |
 | [02. SQL Query Foundations](#02-sql-query-foundations)                                     | CRUD operations, filtering, sorting, constraints |
 | [03. Advanced Query Techniques](#03-advanced-query-techniques)                             | Joins, subqueries, aggregation, grouping         |
 | [04. PostgreSQL-Specific Features](#04-postgresql-specific-features)                       | Data types, JSON, UUID, arrays                   |
@@ -17,25 +16,88 @@
 | [09. Backup, Migration & Production Practices](#09-backup-migration--production-practices) | pg_dump, restore, migrations                     |
 | [10. PostgreSQL DBA & Scaling Concepts](#10-postgresql-dba--scaling-concepts)              | Replication, partitioning, scaling               |
 
-### 01. Database Fundamentals
-
-- What is a Database?
-- What is RDBMS?
-- Relational vs Non-Relational Databases
-- What is SQL?
-- SQL vs RDBMS
-- ACID Properties Overview
-- Client–Server Architecture
-- Tables, Rows, Columns
-- Primary Key Concept
-- Foreign Key Concept
-- Basic ER Modeling
-- Introduction to PostgreSQL
-
 ### 02. SQL Query Foundations
 
 - What is SQL?
-- SQL vs RDBMS
+
+# What is SQL?
+
+**SQL** (Structured Query Language) is the standard language used to communicate with relational databases. You write declarative statements that describe _what_ you want, and the database engine figures out _how_ to retrieve it.
+
+---
+
+## SQL vs the Database Engine
+
+SQL is the **language**; an RDBMS (Relational Database Management System) like PostgreSQL is the **engine** that stores data and interprets your SQL. Multiple engines speak SQL, but each has its own dialect with small differences.
+
+```
+Your Application
+      │
+      │  SQL query  (e.g. SELECT * FROM users WHERE age > 18)
+      ▼
+  RDBMS Engine  (PostgreSQL, MySQL, SQLite…)
+      │
+      │  parsed + executed
+      ▼
+ Tables on disk  (rows, columns, indexes)
+```
+
+---
+
+## Key Ideas
+
+| Concept                        | Explanation                                  |
+| ------------------------------ | -------------------------------------------- |
+| **Declarative**                | You say _what_ you want, not _how_ to get it |
+| **Relational model**           | Data lives in tables linked by keys          |
+| **Multiple sublanguages**      | DDL · DML · DCL · TCL                        |
+| **ISO standard with dialects** | PostgreSQL, MySQL, T-SQL vary slightly       |
+| **Set-based results**          | Returns zero or more rows at once            |
+
+---
+
+## SQL Sublanguages
+
+SQL is divided into four sublanguages:
+
+| Sublanguage | Full Name                    | Key Commands                           | Purpose              |
+| ----------- | ---------------------------- | -------------------------------------- | -------------------- |
+| **DDL**     | Data Definition Language     | `CREATE`, `ALTER`, `DROP`              | Define structure     |
+| **DML**     | Data Manipulation Language   | `SELECT`, `INSERT`, `UPDATE`, `DELETE` | Work with data       |
+| **DCL**     | Data Control Language        | `GRANT`, `REVOKE`                      | Manage permissions   |
+| **TCL**     | Transaction Control Language | `COMMIT`, `ROLLBACK`                   | Control transactions |
+
+---
+
+## A Simple Example
+
+```sql
+-- Create a table (DDL)
+CREATE TABLE users (
+    id    SERIAL PRIMARY KEY,
+    name  VARCHAR(100) NOT NULL,
+    age   INT
+);
+
+-- Insert a row (DML)
+INSERT INTO users (name, age) VALUES ('Alice', 30);
+
+-- Query data (DML)
+SELECT name FROM users WHERE age > 18;
+
+-- Delete a row (DML)
+DELETE FROM users WHERE name = 'Alice';
+```
+
+---
+
+## Key Takeaways
+
+- SQL is **declarative** — describe the result, not the steps to get there.
+- SQL is **not** a database itself; it is the language you use to talk to one.
+- PostgreSQL, MySQL, and SQLite all speak SQL but each adds its own extensions and quirks.
+- Everything in the PostgreSQL study plan — queries, joins, indexes, transactions — builds on these fundamentals.
+
 - Data Types (INT, VARCHAR, TEXT, DATE, BOOLEAN)
 - Primary Key vs Unique Key
 - Foreign Key & Relationships
@@ -210,18 +272,18 @@
 
 > MongoDB is a modern NoSQL document-oriented database designed for high scalability, flexibility, and rapid development. This guide covers core MongoDB fundamentals, data modeling strategies, query techniques, performance optimization, and production-ready architecture design.
 
-| Topics                                                                | Overview                             |
-| --------------------------------------------------------------------- | ------------------------------------ |
-| [01. MongoDB Fundamentals](#01-mongodb-fundamentals)                  | Core NoSQL concepts & document model |
-| [02. CRUD & Query Foundations](#02-crud--query-foundations)           | Insert, find, update, delete         |
-| [03. Advanced Query & Aggregation](#03-advanced-query--aggregation)   | Aggregation pipeline & operators     |
-| [04. Data Modeling & Schema Design](#04-data-modeling--schema-design) | Embedding vs referencing             |
-| [05. Indexing & Performance Optimization](#05-indexing--performance-optimization) | Index strategies & explain |
-| [06. Transactions & Concurrency](#06-transactions--concurrency) | ACID, sessions, write concerns |
-| [07. Replication & High Availability](#07-replication--high-availability) | Replica sets |
-| [08. Sharding & Horizontal Scaling](#08-sharding--horizontal-scaling) | Distributed scaling |
-| [09. Security & Access Control](#09-security--access-control) | Users, roles, authentication |
-| [10. Production, Backup & DBA Concepts](#10-production-backup--dba-concepts) | Monitoring & tuning |
+| Topics                                                                            | Overview                             |
+| --------------------------------------------------------------------------------- | ------------------------------------ |
+| [01. MongoDB Fundamentals](#01-mongodb-fundamentals)                              | Core NoSQL concepts & document model |
+| [02. CRUD & Query Foundations](#02-crud--query-foundations)                       | Insert, find, update, delete         |
+| [03. Advanced Query & Aggregation](#03-advanced-query--aggregation)               | Aggregation pipeline & operators     |
+| [04. Data Modeling & Schema Design](#04-data-modeling--schema-design)             | Embedding vs referencing             |
+| [05. Indexing & Performance Optimization](#05-indexing--performance-optimization) | Index strategies & explain           |
+| [06. Transactions & Concurrency](#06-transactions--concurrency)                   | ACID, sessions, write concerns       |
+| [07. Replication & High Availability](#07-replication--high-availability)         | Replica sets                         |
+| [08. Sharding & Horizontal Scaling](#08-sharding--horizontal-scaling)             | Distributed scaling                  |
+| [09. Security & Access Control](#09-security--access-control)                     | Users, roles, authentication         |
+| [10. Production, Backup & DBA Concepts](#10-production-backup--dba-concepts)      | Monitoring & tuning                  |
 
 ### 01. MongoDB Fundamentals
 
