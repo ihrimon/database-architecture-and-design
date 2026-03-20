@@ -99,6 +99,172 @@ DELETE FROM users WHERE name = 'Alice';
 - Everything in the PostgreSQL study plan — queries, joins, indexes, transactions — builds on these fundamentals.
 
 - Data Types (INT, VARCHAR, TEXT, DATE, BOOLEAN)
+# Data Types (INT, VARCHAR, TEXT, DATE, BOOLEAN)
+
+Every column in a SQL table has a **data type** that defines what kind of value it can store. Choosing the right type enforces data integrity, saves storage space, and enables correct comparisons and sorting.
+
+---
+
+## The Five Core Types
+
+### 1. INT — Whole Numbers
+
+Stores integers with no decimal part. Use for counts, IDs, ages, quantities.
+
+```sql
+CREATE TABLE products (
+    id       INT,
+    quantity INT
+);
+```
+
+**Variants by storage size:**
+
+| Type | Storage | Range |
+|---|---|---|
+| `SMALLINT` | 2 bytes | −32,768 to 32,767 |
+| `INT` / `INTEGER` | 4 bytes | −2,147,483,648 to 2,147,483,647 |
+| `BIGINT` | 8 bytes | −9.2 × 10¹⁸ to 9.2 × 10¹⁸ |
+
+> Use `BIGINT` for user IDs or anything that might grow large. Use `SMALLINT` to save space on small lookup tables.
+
+---
+
+### 2. VARCHAR(n) — Variable-Length Text with a Limit
+
+Stores text up to `n` characters. Only uses as much space as the actual value.
+
+```sql
+CREATE TABLE users (
+    username  VARCHAR(50),
+    email     VARCHAR(255)
+);
+```
+
+- The `(n)` limit is a **constraint**, not a fixed allocation.
+- Values exceeding `n` raise an error.
+- Good for: names, emails, codes, short descriptions where a max length makes sense.
+
+---
+
+### 3. TEXT — Unlimited-Length Text
+
+Stores text of any length — no limit needed.
+
+```sql
+CREATE TABLE posts (
+    body TEXT
+);
+```
+
+- No `(n)` required or allowed.
+- Internally, PostgreSQL stores `VARCHAR` and `TEXT` almost identically — performance is the same.
+- Good for: article bodies, comments, logs, JSON strings, anything open-ended.
+
+**VARCHAR vs TEXT — when to use which:**
+
+| Use `VARCHAR(n)` | Use `TEXT` |
+|---|---|
+| You want the DB to enforce a max length | No meaningful upper bound exists |
+| Short, bounded values (username, country code) | Long or unpredictable content (body, notes) |
+
+---
+
+### 4. DATE — Calendar Dates
+
+Stores a year, month, and day. No time component.
+
+```sql
+CREATE TABLE employees (
+    hire_date   DATE,
+    birth_date  DATE
+);
+
+INSERT INTO employees VALUES ('2024-03-15', '1990-07-01');
+```
+
+- Format: `YYYY-MM-DD`
+- Supports arithmetic: `hire_date + INTERVAL '30 days'`
+- Use `TIMESTAMP` when you also need a time of day.
+
+**Date-related types at a glance:**
+
+| Type | Stores | Example |
+|---|---|---|
+| `DATE` | Date only | `2024-03-15` |
+| `TIME` | Time only | `14:30:00` |
+| `TIMESTAMP` | Date + time | `2024-03-15 14:30:00` |
+| `TIMESTAMPTZ` | Date + time + timezone | `2024-03-15 14:30:00+06` |
+
+> Prefer `TIMESTAMPTZ` in production — it stores UTC and converts on retrieval, avoiding timezone bugs.
+
+---
+
+### 5. BOOLEAN — True / False
+
+Stores a logical value: `TRUE` or `FALSE`.
+
+```sql
+CREATE TABLE accounts (
+    is_active    BOOLEAN,
+    is_verified  BOOLEAN DEFAULT FALSE
+);
+
+INSERT INTO accounts VALUES (TRUE, FALSE);
+```
+
+- PostgreSQL also accepts: `'t'`, `'f'`, `'yes'`, `'no'`, `'1'`, `'0'`
+- Can be `NULL` if the column allows it — meaning *unknown*, not false.
+- Common in `WHERE` clauses: `WHERE is_active = TRUE` or simply `WHERE is_active`
+
+---
+
+## Full Comparison Table
+
+| Type | Storage | Null-able | Use Case |
+|---|---|---|---|
+| `SMALLINT` | 2 bytes | Yes | Small counters, status codes |
+| `INT` | 4 bytes | Yes | IDs, quantities, ages |
+| `BIGINT` | 8 bytes | Yes | Large IDs, financial amounts |
+| `VARCHAR(n)` | Variable (≤ n chars) | Yes | Names, emails, codes |
+| `TEXT` | Variable (unlimited) | Yes | Bodies, notes, logs |
+| `DATE` | 4 bytes | Yes | Birthdays, deadlines |
+| `TIMESTAMP` | 8 bytes | Yes | Event times (no timezone) |
+| `TIMESTAMPTZ` | 8 bytes | Yes | Event times (with timezone) |
+| `BOOLEAN` | 1 byte | Yes | Flags, on/off states |
+
+---
+
+## Practical Example — Putting It Together
+
+```sql
+CREATE TABLE users (
+    id           INT,
+    username     VARCHAR(50),
+    bio          TEXT,
+    birth_date   DATE,
+    is_active    BOOLEAN DEFAULT TRUE
+);
+
+INSERT INTO users (id, username, bio, birth_date, is_active)
+VALUES (
+    1,
+    'alice',
+    'Software engineer and open source contributor.',
+    '1992-05-20',
+    TRUE
+);
+```
+
+---
+
+## Key Takeaways
+
+- Use `INT` for whole numbers; scale up to `BIGINT` for large IDs.
+- Use `VARCHAR(n)` when a max length is meaningful; use `TEXT` when it is not.
+- Use `DATE` for calendar dates; use `TIMESTAMPTZ` when time and timezone matter.
+- `BOOLEAN` can be `NULL` — that means *unknown*, not `FALSE`.
+- Choosing the right type up front prevents bad data and avoids costly migrations later.
 - Primary Key vs Unique Key
 - Foreign Key & Relationships
 - Constraints (NOT NULL, CHECK, DEFAULT)
