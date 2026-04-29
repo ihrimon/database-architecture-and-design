@@ -454,11 +454,18 @@ VALUES (
 ### 01. MongoDB Fundamentals
 
 - What is NoSQL?
+  NoSQL stands for 'Not Only SQL'. It refers to databases that do not follow the traditional relational (table-based) model. NoSQL databases are designed for flexible schemas, horizontal scaling, and handling unstructured or semi-structured data at scale.
+  
 - Document-Oriented Database
+  MongoDB stores each record as a 'Document' — a JSON-like structure of key-value pairs. A single document can hold all related data for one object (e.g., a user with their orders). This avoids the need for multiple JOINs across tables.
+
 - BSON Format
+  MongoDB stores data internally as BSON (Binary JSON). While JSON is text-based, BSON is binary-encoded — making it faster to parse and serialize. BSON also supports extra data types not available in plain JSON, such as Date, ObjectId, and Binary.
+
 - Collections vs Tables
-- Documents vs Rows
 - Dynamic Schema
+  MongoDB does not require you to define a schema before creating a collection. You can add new fields, remove old ones, or change types at any time — without altering existing documents or running migrations. This is called a 'schema-less' or 'dynamic schema' design.
+  
 - MongoDB Architecture Overview
 - MongoDB Server (mongod)
 - Mongo Shell (mongosh)
