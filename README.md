@@ -480,14 +480,11 @@ VALUES (
 
 - Insert One (insertOne)
 - Insert Many (insertMany)
-- Find Documents (find)
-- Find One (findOne)
+- Find Documents (find), Find One (findOne)
 - Projection
-- Update One (updateOne)
-- Update Many (updateMany)
+- Update One (updateOne), Update Many (updateMany)
 - Replace One
-- Delete One (deleteOne)
-- Delete Many (deleteMany)
+- Delete One (deleteOne), Delete Many (deleteMany)
 - Upsert
 - Query Operators
 - Comparison Operators ($eq, $gt, $lt, $in)
@@ -618,7 +615,6 @@ VALUES (
 
 ### 09. Security & Access Control
 
-- Authentication Methods
 - SCRAM
 - X.509
 - LDAP
