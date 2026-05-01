@@ -99,6 +99,7 @@ DELETE FROM users WHERE name = 'Alice';
 - Everything in the PostgreSQL study plan — queries, joins, indexes, transactions — builds on these fundamentals.
 
 - Data Types (INT, VARCHAR, TEXT, DATE, BOOLEAN)
+
 # Data Types (INT, VARCHAR, TEXT, DATE, BOOLEAN)
 
 Every column in a SQL table has a **data type** that defines what kind of value it can store. Choosing the right type enforces data integrity, saves storage space, and enables correct comparisons and sorting.
@@ -120,11 +121,11 @@ CREATE TABLE products (
 
 **Variants by storage size:**
 
-| Type | Storage | Range |
-|---|---|---|
-| `SMALLINT` | 2 bytes | −32,768 to 32,767 |
+| Type              | Storage | Range                           |
+| ----------------- | ------- | ------------------------------- |
+| `SMALLINT`        | 2 bytes | −32,768 to 32,767               |
 | `INT` / `INTEGER` | 4 bytes | −2,147,483,648 to 2,147,483,647 |
-| `BIGINT` | 8 bytes | −9.2 × 10¹⁸ to 9.2 × 10¹⁸ |
+| `BIGINT`          | 8 bytes | −9.2 × 10¹⁸ to 9.2 × 10¹⁸       |
 
 > Use `BIGINT` for user IDs or anything that might grow large. Use `SMALLINT` to save space on small lookup tables.
 
@@ -163,9 +164,9 @@ CREATE TABLE posts (
 
 **VARCHAR vs TEXT — when to use which:**
 
-| Use `VARCHAR(n)` | Use `TEXT` |
-|---|---|
-| You want the DB to enforce a max length | No meaningful upper bound exists |
+| Use `VARCHAR(n)`                               | Use `TEXT`                                  |
+| ---------------------------------------------- | ------------------------------------------- |
+| You want the DB to enforce a max length        | No meaningful upper bound exists            |
 | Short, bounded values (username, country code) | Long or unpredictable content (body, notes) |
 
 ---
@@ -189,11 +190,11 @@ INSERT INTO employees VALUES ('2024-03-15', '1990-07-01');
 
 **Date-related types at a glance:**
 
-| Type | Stores | Example |
-|---|---|---|
-| `DATE` | Date only | `2024-03-15` |
-| `TIME` | Time only | `14:30:00` |
-| `TIMESTAMP` | Date + time | `2024-03-15 14:30:00` |
+| Type          | Stores                 | Example                  |
+| ------------- | ---------------------- | ------------------------ |
+| `DATE`        | Date only              | `2024-03-15`             |
+| `TIME`        | Time only              | `14:30:00`               |
+| `TIMESTAMP`   | Date + time            | `2024-03-15 14:30:00`    |
 | `TIMESTAMPTZ` | Date + time + timezone | `2024-03-15 14:30:00+06` |
 
 > Prefer `TIMESTAMPTZ` in production — it stores UTC and converts on retrieval, avoiding timezone bugs.
@@ -214,24 +215,24 @@ INSERT INTO accounts VALUES (TRUE, FALSE);
 ```
 
 - PostgreSQL also accepts: `'t'`, `'f'`, `'yes'`, `'no'`, `'1'`, `'0'`
-- Can be `NULL` if the column allows it — meaning *unknown*, not false.
+- Can be `NULL` if the column allows it — meaning _unknown_, not false.
 - Common in `WHERE` clauses: `WHERE is_active = TRUE` or simply `WHERE is_active`
 
 ---
 
 ## Full Comparison Table
 
-| Type | Storage | Null-able | Use Case |
-|---|---|---|---|
-| `SMALLINT` | 2 bytes | Yes | Small counters, status codes |
-| `INT` | 4 bytes | Yes | IDs, quantities, ages |
-| `BIGINT` | 8 bytes | Yes | Large IDs, financial amounts |
-| `VARCHAR(n)` | Variable (≤ n chars) | Yes | Names, emails, codes |
-| `TEXT` | Variable (unlimited) | Yes | Bodies, notes, logs |
-| `DATE` | 4 bytes | Yes | Birthdays, deadlines |
-| `TIMESTAMP` | 8 bytes | Yes | Event times (no timezone) |
-| `TIMESTAMPTZ` | 8 bytes | Yes | Event times (with timezone) |
-| `BOOLEAN` | 1 byte | Yes | Flags, on/off states |
+| Type          | Storage              | Null-able | Use Case                     |
+| ------------- | -------------------- | --------- | ---------------------------- |
+| `SMALLINT`    | 2 bytes              | Yes       | Small counters, status codes |
+| `INT`         | 4 bytes              | Yes       | IDs, quantities, ages        |
+| `BIGINT`      | 8 bytes              | Yes       | Large IDs, financial amounts |
+| `VARCHAR(n)`  | Variable (≤ n chars) | Yes       | Names, emails, codes         |
+| `TEXT`        | Variable (unlimited) | Yes       | Bodies, notes, logs          |
+| `DATE`        | 4 bytes              | Yes       | Birthdays, deadlines         |
+| `TIMESTAMP`   | 8 bytes              | Yes       | Event times (no timezone)    |
+| `TIMESTAMPTZ` | 8 bytes              | Yes       | Event times (with timezone)  |
+| `BOOLEAN`     | 1 byte               | Yes       | Flags, on/off states         |
 
 ---
 
@@ -263,7 +264,7 @@ VALUES (
 - Use `INT` for whole numbers; scale up to `BIGINT` for large IDs.
 - Use `VARCHAR(n)` when a max length is meaningful; use `TEXT` when it is not.
 - Use `DATE` for calendar dates; use `TIMESTAMPTZ` when time and timezone matter.
-- `BOOLEAN` can be `NULL` — that means *unknown*, not `FALSE`.
+- `BOOLEAN` can be `NULL` — that means _unknown_, not `FALSE`.
 - Choosing the right type up front prevents bad data and avoids costly migrations later.
 - Primary Key vs Unique Key
 - Foreign Key & Relationships
@@ -455,7 +456,6 @@ VALUES (
 
 - What is NoSQL?
   NoSQL stands for 'Not Only SQL'. It refers to databases that do not follow the traditional relational (table-based) model. NoSQL databases are designed for flexible schemas, horizontal scaling, and handling unstructured or semi-structured data at scale.
-  
 - Document-Oriented Database
   MongoDB stores each record as a 'Document' — a JSON-like structure of key-value pairs. A single document can hold all related data for one object (e.g., a user with their orders). This avoids the need for multiple JOINs across tables.
 
@@ -465,12 +465,50 @@ VALUES (
 - Collections vs Tables
 - Dynamic Schema
   MongoDB does not require you to define a schema before creating a collection. You can add new fields, remove old ones, or change types at any time — without altering existing documents or running migrations. This is called a 'schema-less' or 'dynamic schema' design.
-  
 - MongoDB Architecture Overview
 - MongoDB Server (mongod)
+  mongod is MongoDB's core background process (daemon). It handles all data storage, query processing, indexing, and connection management. Without mongod running, nothing works — it is the engine of MongoDB.
+
+  ```md
+  # Start mongod manually
+
+  mongod --dbpath /data/db --port 27017
+
+# Common flags:
+
+# --dbpath : where to store data files
+
+# --port : which port to listen on (default: 27017)
+
+# --logpath : log file location
+
+# --auth : enable authentication (always use in production!)
+
+# Check if mongod is running:
+
+ps aux | grep mongod # Linux/macOS
+Get-Process mongod # Windows PowerShell
+
+# Start as a Windows service:
+
+net start MongoDB
+
+# mongod config file (mongod.conf):
+
+storage:
+dbPath: /var/lib/mongodb
+net:
+port: 27017
+security:
+authorization: enabled
+
+```
 - Mongo Shell (mongosh)
 - MongoDB Atlas
+    MongoDB Atlas is MongoDB's official fully-managed cloud service (DBaaS — Database as a Service). You get a MongoDB cluster running on AWS, GCP, or Azure — without managing any servers yourself. It includes a free tier (512MB), built-in backups, monitoring, and auto-scaling.
+
 - Database & Collection Concept
+
 - \_id Field & ObjectId
 - CAP Theorem
 - BASE vs ACID
@@ -650,3 +688,4 @@ VALUES (
 - Disaster Recovery Planning
 - Load Testing
 - Capacity Planning
+```
