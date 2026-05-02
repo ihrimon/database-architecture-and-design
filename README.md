@@ -473,6 +473,7 @@ VALUES (
   # Start mongod manually
 
   mongod --dbpath /data/db --port 27017
+  ```
 
 # Common flags:
 
@@ -510,8 +511,10 @@ authorization: enabled
 - Database & Collection Concept
 
 - \_id Field & ObjectId
+    Every MongoDB document must have an _id field — it's the primary key. If you don't provide one on insert, MongoDB automatically generates an ObjectId. ObjectId is a 12-byte unique identifier that encodes a timestamp, machine ID, process ID, and a random counter.
 - CAP Theorem
 - BASE vs ACID
+    ACID (Atomicity, Consistency, Isolation, Durability) is the strict transaction model used by SQL databases — think bank transfers. BASE (Basically Available, Soft state, Eventually consistent) is the relaxed model used by most NoSQL systems — think social media like counts. MongoDB 4.0+ supports multi-document ACID transactions when you need them.
 - Introduction to MongoDB
 
 ### 02. CRUD & Query Foundations
